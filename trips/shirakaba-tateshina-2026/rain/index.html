@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>白樺湖・蓼科 3世代旅行｜雨天対応版</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<style>
+:root{
+  --bg:#f6f8fb;--card:#fff;--ink:#1f2937;--muted:#667085;--line:#e5e7eb;
+  --blue:#2563eb;--blue2:#edf4ff;--green:#157a5a;--green2:#eaf8f2;
+  --amber:#9a6700;--amber2:#fff7e6;--pink:#b42360;--pink2:#fff1f5;
+  --purple:#6941c6;--purple2:#f4f0ff;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
+.wrap{max-width:1120px;margin:auto;padding:22px 16px 58px}
+.hero{background:linear-gradient(135deg,#214e70 0%,#2f6f98 58%,#3f8ab5 100%);color:#fff;border-radius:24px;padding:28px;box-shadow:0 10px 28px rgba(16,24,40,.10)}
+.hero .eyebrow{font-size:12px;letter-spacing:.13em;font-weight:800;opacity:.86}
+.hero h1{margin:6px 0 8px;font-size:30px;line-height:1.25}.hero p{margin:0;opacity:.95}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:15px}.tag{padding:6px 10px;border:1px solid rgba(255,255,255,.36);background:rgba(255,255,255,.13);border-radius:999px;font-size:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:19px;box-shadow:0 4px 18px rgba(16,24,40,.05)}
+.full{grid-column:1/-1}
+h2{margin:0 0 12px;font-size:22px}.kicker{font-size:11px;letter-spacing:.11em;color:var(--muted);font-weight:800;text-transform:uppercase;margin-bottom:3px}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.sum{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fbfcfd}.sum b{display:block;font-size:16px;margin-bottom:3px}.sum span{font-size:13px;color:var(--muted)}.sum .total{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);font-size:12px;font-weight:800;color:#344054}
+.timeline{border-left:3px solid #d0d5dd;margin-left:10px;padding-left:24px}
+.slot{position:relative;padding-bottom:17px}.slot:last-child{padding-bottom:0}
+.slot:before{content:"";position:absolute;left:-32px;top:7px;width:12px;height:12px;border:3px solid var(--blue);border-radius:50%;background:#fff}
+.time{font-size:13px;font-weight:800;color:var(--blue)}.title{font-size:17px;font-weight:800}.note{font-size:13px;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;padding:2px 8px;font-size:11px;font-weight:800;margin:3px 4px 4px 0}
+.food{background:var(--amber2);color:var(--amber)}.play{background:var(--blue2);color:#2459a8}.hotel{background:var(--green2);color:var(--green)}.family{background:var(--pink2);color:var(--pink)}
+.move{display:inline-flex;align-items:center;gap:5px;background:var(--purple2);color:var(--purple);border-radius:8px;padding:5px 9px;font-size:12px;font-weight:800;margin:6px 0}
+.callout{padding:14px 16px;background:var(--blue2);border-left:5px solid var(--blue);border-radius:11px}
+.callout.green{background:var(--green2);border-left-color:var(--green)}
+.callout.amber{background:var(--amber2);border-left-color:#d08a1d}
+.table{width:100%;border-collapse:collapse;font-size:14px}.table th,.table td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}.table th{text-align:left;color:var(--muted);font-weight:700}
+#map{height:455px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.routebtn{display:inline-block;margin:5px 7px 0 0;padding:9px 13px;border-radius:10px;background:#175cd3;color:#fff;text-decoration:none;font-size:13px;font-weight:800}
+.linkchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.linkchip{display:inline-block;padding:8px 12px;border-radius:999px;background:#eef4ff;border:1px solid #cfe0ff;color:#175cd3;text-decoration:none;font-size:13px}
+.small{font-size:12px;color:var(--muted)}
+.footer{margin-top:15px;color:var(--muted);font-size:12px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.summary{grid-template-columns:1fr}.hero h1{font-size:24px}#map{height:360px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+  <div class="eyebrow">3 GENERATIONS FAMILY TRIP · RAIN PLAN</div>
+  <h1>白樺湖・蓼科 3世代旅行<br>雨天対応版｜2026/9/20（日）– 9/22（火）</h1>
+  <p>9/21の雨予報を考慮し、ファミリーランドを9/20へ。9/21は屋内中心、9/22は北八ヶ岳・蓼科湖を楽しむプランです。</p>
+  <div class="tags">
+    <span class="tag">🎡 20日：ファミリーランド</span>
+    <span class="tag">☔ 21日：屋内中心</span>
+    <span class="tag">🚡 22日：北八ヶ岳</span>
+    <span class="tag">🚗 国立から2台</span>
+  </div>
+</section>
+
+<div class="grid">
+<section class="card full">
+  <h2>3日間の予定</h2>
+  <div class="summary">
+    <div class="sum">
+      <b>DAY 1｜9/20（日）</b>
+      <span>国立 → 双葉SA → 池の平ホテル → ファミリーランド＋どうぶつ王国 → 温泉 → 夕食 → 友梨ちゃんのお誕生日お祝い</span>
+      <div class="total">屋外を優先して楽しむ日</div>
+    </div>
+    <div class="sum">
+      <b>DAY 2｜9/21（月・祝）</b>
+      <span>インドアパーク → 温水プール → 長門牧場で昼食 → 滝の湯 → キッズパーク／釣り → 温泉 → 夕食</span>
+      <div class="total">雨でもしっかり遊べる日</div>
+    </div>
+    <div class="sum">
+      <b>DAY 3｜9/22（火）</b>
+      <span>滝の湯 → 北八ヶ岳ロープウェイ → 蓼科湖で昼食＆ボート → 談合坂SA → 国立</span>
+      <div class="total">高原観光を楽しむ日</div>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="kicker">DAY 1 · 9/20 SUN</div>
+  <h2>国立 → 池の平ホテル → ファミリーランド</h2>
+  <div class="timeline">
+    <div class="slot">
+      <div class="time">08:00ごろ</div><div class="title">国立市の自宅を出発</div>
+      <div class="move">🚗 → 双葉SA（下り）｜約105〜110km・約1時間25〜40分</div>
+    </div>
+    <div class="slot">
+      <div class="time">09:30〜10:00ごろ</div><div class="title">双葉SA（下り）で休憩</div>
+      <span class="badge family">20〜30分</span>
+      <div class="note">トイレ・飲み物・子どもの気分転換。</div>
+      <div class="move">🚗 → 池の平ホテル｜約75〜85km・約1時間20〜30分</div>
+    </div>
+    <div class="slot">
+      <div class="time">11:20〜11:40ごろ</div><div class="title">池の平ホテル 到着・チェックイン手続き</div>
+      <span class="badge hotel">10〜15分</span>
+      <div class="note">荷物を預け、夕食時間の案内もここで確認。</div>
+    </div>
+    <div class="slot">
+      <div class="time">11:45〜12:25</div><div class="title">ファミリーランド園内で昼食</div>
+      <span class="badge food">約40分</span>
+    </div>
+    <div class="slot">
+      <div class="time">12:25〜13:45</div><div class="title">アトラクション</div>
+      <span class="badge play">約1時間20分</span>
+      <div class="note">友梨ちゃんが楽しめる乗り物を優先。</div>
+    </div>
+    <div class="slot">
+      <div class="time">13:45〜14:45</div><div class="title">わくわくどうぶつ王国</div>
+      <span class="badge play">約60分</span>
+      <div class="note">動物とのふれあい・餌やりを中心に。</div>
+    </div>
+    <div class="slot">
+      <div class="time">14:45〜16:20</div><div class="title">アトラクションをもう一度</div>
+      <span class="badge play">約1時間35分</span>
+    </div>
+    <div class="slot">
+      <div class="time">16:30〜17:30</div><div class="title">温泉・お部屋で休憩</div>
+      <span class="badge family">約60分</span>
+    </div>
+    <div class="slot">
+      <div class="time">18:00ごろ</div><div class="title">ホテル夕食ビュッフェ</div>
+      <span class="badge food">約60〜90分</span>
+    </div>
+    <div class="slot">
+      <div class="time">夕食後</div><div class="title">お部屋で友梨ちゃんのお誕生日お祝い</div>
+      <span class="badge family">プレゼント＋ケーキ</span>
+      <div class="note">祖父母から少し早めのお誕生日プレゼントを渡す予定。</div>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="kicker">DAY 2 · 9/21 MON</div>
+  <h2>雨の日：インドア＋プール → 長門牧場 → 滝の湯</h2>
+  <div class="timeline">
+    <div class="slot"><div class="time">07:15〜08:00</div><div class="title">朝食ビュッフェ</div><span class="badge food">約45分</span></div>
+    <div class="slot"><div class="time">08:00〜08:45</div><div class="title">荷造り・チェックアウト準備</div></div>
+    <div class="slot">
+      <div class="time">09:00〜10:30</div><div class="title">インドアパーク</div>
+      <span class="badge play">カラックリ</span><span class="badge play">きっず×きっず</span><span class="badge play">プラズマカー</span>
+      <div class="note">雨天でもしっかり遊べる屋内メニュー。</div>
+    </div>
+    <div class="slot">
+      <div class="time">10:45〜12:00</div><div class="title">室内温水プール</div>
+      <span class="badge play">約75分</span>
+    </div>
+    <div class="slot">
+      <div class="time">12:15</div><div class="title">池の平ホテルを出発</div>
+      <div class="move">🚗 → 長門牧場｜約10.4km・約13〜15分</div>
+    </div>
+    <div class="slot">
+      <div class="time">12:30〜13:45</div><div class="title">長門牧場で昼食</div>
+      <span class="badge food">約60〜75分</span>
+      <div class="note">レストラン コリーヌで石窯ピザ。雨が弱ければソフトクリームと短い散策も。</div>
+    </div>
+    <div class="slot">
+      <div class="time">コリーヌ混雑時</div><div class="title">女神湖 venusへ切り替え</div>
+      <div class="note">長門牧場から概ね10〜15分。ランチの代替として利用。</div>
+    </div>
+    <div class="slot">
+      <div class="time">14:00ごろ</div><div class="title">長門牧場を出発</div>
+      <div class="move">🚗 → 蓼科グランドホテル滝の湯｜約25〜30km・約35〜40分</div>
+    </div>
+    <div class="slot">
+      <div class="time">14:40〜15:00</div><div class="title">蓼科グランドホテル滝の湯 チェックイン</div>
+      <span class="badge hotel">ホテル</span>
+    </div>
+    <div class="slot">
+      <div class="time">15:00〜16:30</div><div class="title">蓼科キッズパーク</div>
+      <span class="badge play">約1時間30分</span>
+      <div class="note">祖父母は温泉・休憩に分かれてもOK。</div>
+    </div>
+    <div class="slot">
+      <div class="time">雨が弱ければ</div><div class="title">ニジマス釣りへ変更してもOK</div>
+      <span class="badge play">約60分</span>
+      <div class="note">本降りなら無理せずキッズパークを優先。</div>
+    </div>
+    <div class="slot"><div class="time">16:30〜17:30</div><div class="title">温泉・お部屋で休憩</div></div>
+    <div class="slot"><div class="time">18:00ごろ</div><div class="title">夕食ビュッフェ</div><span class="badge food">約90分</span></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="kicker">DAY 3 · 9/22 TUE</div>
+  <h2>北八ヶ岳ロープウェイ → 蓼科湖 → 国立</h2>
+  <div class="timeline">
+    <div class="slot"><div class="time">07:15〜08:00</div><div class="title">朝食ビュッフェ</div></div>
+    <div class="slot"><div class="time">09:00〜09:40</div><div class="title">蓼科キッズパーク</div><span class="badge play">約40分</span></div>
+    <div class="slot">
+      <div class="time">10:00</div><div class="title">チェックアウト・出発</div>
+      <div class="move">🚗 → 北八ヶ岳ロープウェイ｜約7.9km・約20分</div>
+    </div>
+    <div class="slot">
+      <div class="time">10:20〜11:45</div><div class="title">北八ヶ岳ロープウェイ</div>
+      <span class="badge play">約1時間25分</span>
+      <div class="note">ロープウェイ往復＋山頂で短めの散策。</div>
+    </div>
+    <div class="slot">
+      <div class="time">11:45ごろ</div><div class="title">蓼科湖へ移動</div>
+      <div class="move">🚗 約8〜9km・約15〜20分</div>
+    </div>
+    <div class="slot">
+      <div class="time">12:10〜13:10</div><div class="title">蓼科湖周辺で昼食</div>
+      <span class="badge food">約60分</span>
+      <div class="note">第一候補：たてしな湖畔 エプロンマーク。</div>
+    </div>
+    <div class="slot">
+      <div class="time">13:10〜14:00</div><div class="title">蓼科湖で遊ぶ</div>
+      <span class="badge play">あひるボート</span>
+    </div>
+    <div class="slot">
+      <div class="time">14:00ごろ</div><div class="title">国立へ出発</div>
+      <div class="move">🚗 → 談合坂SA（上り）｜約140km・約2時間10〜20分</div>
+    </div>
+    <div class="slot">
+      <div class="time">16:15〜16:30ごろ</div><div class="title">談合坂SA（上り）で休憩</div>
+      <span class="badge family">20〜30分</span>
+      <div class="move">🚗 → 国立｜約45km・約40〜50分（渋滞除く）</div>
+    </div>
+    <div class="slot">
+      <div class="time">17:30〜19:00ごろ</div><div class="title">国立へ到着</div>
+      <div class="note">連休最終日の中央道渋滞で遅れる可能性があります。</div>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="kicker">LUNCH PLAN</div>
+  <h2>昼食まとめ</h2>
+  <table class="table">
+    <tr><th>9/20</th><td><b>ファミリーランド園内</b><br><span class="small">到着後すぐ食べて、午後は屋外遊びに集中。</span></td></tr>
+    <tr><th>9/21</th><td><b>長門牧場 レストラン コリーヌ</b><br><span class="small">石窯ピザ。混雑時は女神湖 venus。</span></td></tr>
+    <tr><th>9/22</th><td><b>蓼科湖周辺</b><br><span class="small">第一候補：たてしな湖畔 エプロンマーク。</span></td></tr>
+  </table>
+  <div class="callout amber" style="margin-top:12px"><b>長門牧場：</b>雨が強い場合は「昼食だけ」にして滞在を短縮。雨が弱ければソフトクリームと短い散策を追加します。</div>
+</section>
+
+<section class="card full">
+  <h2>訪問スポットマップ</h2>
+  <div id="map"></div>
+  <div style="margin-top:12px">
+    <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=%E5%9B%BD%E7%AB%8B%E5%B8%82&destination=%E7%99%BD%E6%A8%BA%E3%83%AA%E3%82%BE%E3%83%BC%E3%83%88%20%E6%B1%A0%E3%81%AE%E5%B9%B3%E3%83%9B%E3%83%86%E3%83%AB&waypoints=%E5%8F%8C%E8%91%89SA%20%E4%B8%8B%E3%82%8A&travelmode=driving" target="_blank">DAY1をGoogleマップで開く</a>
+    <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=%E7%99%BD%E6%A8%BA%E3%83%AA%E3%82%BE%E3%83%BC%E3%83%88%20%E6%B1%A0%E3%81%AE%E5%B9%B3%E3%83%9B%E3%83%86%E3%83%AB&destination=%E8%93%BC%E7%A7%91%E3%82%B0%E3%83%A9%E3%83%B3%E3%83%89%E3%83%9B%E3%83%86%E3%83%AB%E6%BB%9D%E3%81%AE%E6%B9%AF&waypoints=%E9%95%B7%E9%96%80%E7%89%A7%E5%A0%B4&travelmode=driving" target="_blank">DAY2をGoogleマップで開く</a>
+    <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=%E8%93%BC%E7%A7%91%E3%82%B0%E3%83%A9%E3%83%B3%E3%83%89%E3%83%9B%E3%83%86%E3%83%AB%E6%BB%9D%E3%81%AE%E6%B9%AF&destination=%E5%9B%BD%E7%AB%8B%E5%B8%82&waypoints=%E5%8C%97%E5%85%AB%E3%83%B6%E5%B2%B3%E3%83%AD%E3%83%BC%E3%83%97%E3%82%A6%E3%82%A7%E3%82%A4%7C%E8%93%BC%E7%A7%91%E6%B9%96%7C%E8%AB%87%E5%90%88%E5%9D%82SA%20%E4%B8%8A%E3%82%8A&travelmode=driving" target="_blank">DAY3をGoogleマップで開く</a>
+  </div>
+  <div class="linkchips">
+    <a class="linkchip" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%8C%E8%91%89SA%20%E4%B8%8B%E3%82%8A" target="_blank">双葉SA（下り）</a>
+    <a class="linkchip" href="https://www.google.com/maps/search/?api=1&query=%E7%99%BD%E6%A8%BA%E3%83%AA%E3%82%BE%E3%83%BC%E3%83%88%20%E6%B1%A0%E3%81%AE%E5%B9%B3%E3%83%9B%E3%83%86%E3%83%AB" target="_blank">池の平ホテル</a>
+    <a class="linkchip" href="https://www.google.com/maps/search/?api=1&query=%E9%95%B7%E9%96%80%E7%89%A7%E5%A0%B4" target="_blank">長門牧場</a>
+    <a class="linkchip" href="https://www.google.com/maps/search/?api=1&query=%E5%A5%B3%E7%A5%9E%E6%B9%96%20venus" target="_blank">女神湖 venus</a>
+    <a class="linkchip" href="https://www.google.com/maps/search/?api=1&query=%E8%93%BC%E7%A7%91%E3%82%B0%E3%83%A9%E3%83%B3%E3%83%89%E3%83%9B%E3%83%86%E3%83%AB%E6%BB%9D%E3%81%AE%E6%B9%AF" target="_blank">滝の湯</a>
+    <a class="linkchip" href="https://www.google.com/maps/search/?api=1&query=%E5%8C%97%E5%85%AB%E3%83%B6%E5%B2%B3%E3%83%AD%E3%83%BC%E3%83%97%E3%82%A6%E3%82%A7%E3%82%A4" target="_blank">北八ヶ岳ロープウェイ</a>
+    <a class="linkchip" href="https://www.google.com/maps/search/?api=1&query=%E8%93%BC%E7%A7%91%E6%B9%96" target="_blank">蓼科湖</a>
+    <a class="linkchip" href="https://www.google.com/maps/search/?api=1&query=%E8%AB%87%E5%90%88%E5%9D%82SA%20%E4%B8%8A%E3%82%8A" target="_blank">談合坂SA（上り）</a>
+  </div>
+  <p class="small" style="margin-top:12px">地図のピンをタップすると場所名が表示され、「Googleマップで開く」から地図アプリへ移動できます。</p>
+</section>
+</div>
+
+<div class="footer">※ 天候・道路状況・アトラクション運行状況により時間は前後する場合があります。</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+const map=L.map('map').setView([36.02,138.35],9);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+const spots=[
+{name:'双葉SA（下り）',lat:35.6867,lng:138.5236,desc:'DAY1休憩',url:'https://www.google.com/maps/search/?api=1&query=%E5%8F%8C%E8%91%89SA%20%E4%B8%8B%E3%82%8A'},
+{name:'白樺リゾート 池の平ホテル',lat:36.1409,lng:138.2674,desc:'DAY1宿泊・ファミリーランド',url:'https://www.google.com/maps/search/?api=1&query=%E7%99%BD%E6%A8%BA%E3%83%AA%E3%82%BE%E3%83%BC%E3%83%88%20%E6%B1%A0%E3%81%AE%E5%B9%B3%E3%83%9B%E3%83%86%E3%83%AB'},
+{name:'長門牧場',lat:36.1816,lng:138.2690,desc:'DAY2昼食',url:'https://www.google.com/maps/search/?api=1&query=%E9%95%B7%E9%96%80%E7%89%A7%E5%A0%B4'},
+{name:'女神湖 venus',lat:36.1517,lng:138.2870,desc:'DAY2昼食代替',url:'https://www.google.com/maps/search/?api=1&query=%E5%A5%B3%E7%A5%9E%E6%B9%96%20venus'},
+{name:'蓼科グランドホテル滝の湯',lat:36.0493,lng:138.2662,desc:'DAY2宿泊',url:'https://www.google.com/maps/search/?api=1&query=%E8%93%BC%E7%A7%91%E3%82%B0%E3%83%A9%E3%83%B3%E3%83%89%E3%83%9B%E3%83%86%E3%83%AB%E6%BB%9D%E3%81%AE%E6%B9%AF'},
+{name:'北八ヶ岳ロープウェイ',lat:36.1047,lng:138.2968,desc:'DAY3午前',url:'https://www.google.com/maps/search/?api=1&query=%E5%8C%97%E5%85%AB%E3%83%B6%E5%B2%B3%E3%83%AD%E3%83%BC%E3%83%97%E3%82%A6%E3%82%A7%E3%82%A4'},
+{name:'蓼科湖',lat:36.0323,lng:138.2503,desc:'DAY3昼食・ボート',url:'https://www.google.com/maps/search/?api=1&query=%E8%93%BC%E7%A7%91%E6%B9%96'},
+{name:'談合坂SA（上り）',lat:35.6397,lng:139.0370,desc:'DAY3帰路休憩',url:'https://www.google.com/maps/search/?api=1&query=%E8%AB%87%E5%90%88%E5%9D%82SA%20%E4%B8%8A%E3%82%8A'}
+];
+const bounds=[];
+spots.forEach(s=>{L.marker([s.lat,s.lng]).addTo(map).bindPopup(`<b>${s.name}</b><br>${s.desc}<br><a href="${s.url}" target="_blank">Googleマップで開く</a>`);bounds.push([s.lat,s.lng]);});
+map.fitBounds(bounds,{padding:[30,30]});
+</script>
+</body>
+</html>
